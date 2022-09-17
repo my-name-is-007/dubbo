@@ -1,0 +1,56 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one or more
+ * contributor license agreements.  See the NOTICE file distributed with
+ * this work for additional information regarding copyright ownership.
+ * The ASF licenses this file to You under the Apache License, Version 2.0
+ * (the "License"); you may not use this file except in compliance with
+ * the License.  You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+package org.apache.dubbo.remoting.transport.netty4;
+
+import org.apache.dubbo.common.URL;
+import org.apache.dubbo.remoting.ChannelHandler;
+import org.apache.dubbo.remoting.Client;
+import org.apache.dubbo.remoting.RemotingException;
+import org.apache.dubbo.remoting.RemotingServer;
+import org.apache.dubbo.remoting.Transporter;
+
+/**
+ * Default extension of {@link Transporter} using netty4.x.
+ */
+public class NettyTransporter implements Transporter {
+
+    public static final String NAME = "netty";
+
+    /**
+     * 创建服务端
+     * listener参数 其实上层包了一个监听器, 仅仅监听而已, 这里不展示
+     * @param listener 请求处理器处理器, DecodeHandler ---> HeaderExchangeHandler ---> DubboProtocol#requestHandler
+     */
+    @Override
+    public RemotingServer bind(URL url, ChannelHandler listener) throws RemotingException {
+        //创建一个NettyServer
+        return new NettyServer(url, listener);
+    }
+
+    /**
+     * 创建客户端
+     * @param listener 请求处理器处理器, DecodeHandler ---> HeaderExchangeHandler ---> DubboProtocol#requestHandler
+     * @return
+     * @throws RemotingException
+     */
+    @Override
+    public Client connect(URL url, ChannelHandler listener) throws RemotingException {
+        //创建一个NettyClient
+        return new NettyClient(url, listener);
+    }
+
+}
